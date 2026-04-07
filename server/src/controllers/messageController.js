@@ -1,7 +1,9 @@
 import pkg from 'express';
 const { Request, Response } = pkg;
 import { z } from 'zod';
-import pool from '../db.js';
+import { getPool } from '../db.js';
+
+const pool = getPool();
 
 const sendMessageSchema = z.object({
   receiverId: z.number().min(1, 'Receiver is required'),

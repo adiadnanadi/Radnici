@@ -3,7 +3,9 @@ const { Request, Response } = pkg;
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
-import pool from '../db.js';
+import { getPool } from '../db.js';
+
+const pool = getPool();
 
 const registerSchema = z.object({
   email: z.string().email('Invalid email format'),

@@ -1,32 +1,43 @@
-import pkg from 'express';
-const { Request, Response } = pkg;
 import pg from 'pg';
 
 const { Pool } = pg;
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-    mode: 'require'
+let pool = null;
+
+export const getPool = () => {
+  if (!pool && process.env.DATABASE_URL) {
+    pool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: {
+        rejectUnauthorized: false,
+        mode: 'require'
+      }
+    });
+    
+    pool.on('connect', () => {
+      console.log('Connected to PostgreSQL database');
+    });
+    
+    pool.on('error', (err) => {
+      console.error('PostgreSQL error:', err);
+    });
   }
-});
-
-pool.on('connect', () => {
-  console.log('Connected to PostgreSQL database');
-});
-
-pool.on('error', (err) => {
-  console.error('PostgreSQL error:', err);
-});
+  return pool;
+};
 
 export const initDatabase = async () => {
+  const db = getPool();
+  if (!db) {
+    console.log('⚠️ No database connection - DATABASE_URL not set');
+    return;
+  }
+  
   try {
     console.log('Testing database connection...');
-    const result = await pool.query('SELECT 1 as test');
+    const result = await db.query('SELECT 1 as test');
     console.log('Database connection test:', result.rows);
     
-    await pool.query(`
+    await db.query(`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         email VARCHAR(255) UNIQUE NOT NULL,
@@ -92,8 +103,9 @@ export const initDatabase = async () => {
     `);
     console.log('Database tables created successfully');
   } catch (error) {
-    console.error('Error initializing database:', error);
+    console.error('Error initializing database:', error.message);
+    throw error;
   }
 };
 
-export default pool;
+export default { query: (...args) => getPool()?.query(...args) };

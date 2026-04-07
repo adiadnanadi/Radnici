@@ -111,3 +111,16 @@ export const deleteMessage = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
+
+export const getUnreadCount = async (req, res) => {
+  try {
+    const result = await pool.query(
+      'SELECT COUNT(*) as count FROM messages WHERE "receiverId" = $1 AND "isRead" = false',
+      [req.user.userId]
+    );
+    res.json({ count: parseInt(result.rows[0].count) });
+  } catch (error) {
+    console.error('Get unread count error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};

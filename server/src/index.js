@@ -41,19 +41,19 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
-  try {
-    if (process.env.DATABASE_URL) {
+  if (process.env.DATABASE_URL) {
+    try {
       await initDatabase();
       console.log('✅ Database initialized');
+    } catch (error) {
+      console.error('⚠️ Database connection failed:', error.message);
+      console.log('⚠️ Server will run without database');
     }
-    
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-    });
-  } catch (error) {
-    console.error('Failed to start server:', error);
-    process.exit(1);
   }
+  
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+  });
 };
 
 startServer();

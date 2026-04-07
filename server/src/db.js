@@ -7,7 +7,8 @@ const { Pool } = pg;
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false
+    rejectUnauthorized: false,
+    mode: 'require'
   }
 });
 
@@ -20,9 +21,12 @@ pool.on('error', (err) => {
 });
 
 export const initDatabase = async () => {
-  const client = await pool.connect();
   try {
-    await client.query(`
+    console.log('Testing database connection...');
+    const result = await pool.query('SELECT 1 as test');
+    console.log('Database connection test:', result.rows);
+    
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         email VARCHAR(255) UNIQUE NOT NULL,
@@ -89,9 +93,6 @@ export const initDatabase = async () => {
     console.log('Database tables created successfully');
   } catch (error) {
     console.error('Error initializing database:', error);
-    throw error;
-  } finally {
-    client.release();
   }
 };
 

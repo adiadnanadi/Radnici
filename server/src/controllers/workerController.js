@@ -160,8 +160,10 @@ export const updateWorkerProfile = async (req, res) => {
 
     Object.entries(data).forEach(([key, value]) => {
       paramCount++;
-      if (arrayFields.includes(key) && Array.isArray(value)) {
-        params.push(JSON.stringify(value));
+      if (arrayFields.includes(key)) {
+        const arrValue = Array.isArray(value) ? value : JSON.parse(value || '[]');
+        const jsonStr = JSON.stringify(arrValue);
+        params.push(jsonStr);
         updates.push(`"${key}" = $${paramCount}::jsonb`);
       } else {
         params.push(value);

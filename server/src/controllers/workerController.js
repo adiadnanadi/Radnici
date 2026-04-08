@@ -19,6 +19,22 @@ const createWorkerProfileSchema = z.object({
   skills: z.array(z.string()).optional(),
 });
 
+const updateWorkerProfileSchema = z.object({
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  phone: z.string().optional().nullable(),
+  location: z.string().optional().nullable(),
+  category: z.string().optional().nullable(),
+  subcategory: z.string().optional().nullable(),
+  description: z.string().optional().nullable(),
+  hourlyRate: z.coerce.number().optional().nullable(),
+  experienceYears: z.coerce.number().optional().nullable(),
+  availability: z.enum(['AVAILABLE', 'BUSY', 'NOT_AVAILABLE']).optional().nullable(),
+  serviceArea: z.array(z.string()).optional().nullable(),
+  languages: z.array(z.string()).optional().nullable(),
+  skills: z.array(z.string()).optional().nullable(),
+});
+
 export const getAllWorkers = async (req, res) => {
   try {
     const { location, category, minPrice, maxPrice, minExperience, availability, search, sort } = req.query;
@@ -142,7 +158,7 @@ export const createWorkerProfile = async (req, res) => {
 export const updateWorkerProfile = async (req, res) => {
   try {
     const { id } = req.params;
-    const data = createWorkerProfileSchema.partial().parse(req.body);
+    const data = updateWorkerProfileSchema.parse(req.body);
 
     const existing = await pool.query('SELECT "userId" FROM worker_profiles WHERE id = $1', [id]);
     if (existing.rows.length === 0) {

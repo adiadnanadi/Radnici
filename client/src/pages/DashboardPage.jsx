@@ -173,7 +173,7 @@ const DashboardPage = () => {
               <div className="space-y-6">
                 {isWorker && (
                   <>
-                    {workerProfile ? (
+                    {editingProfile && (
                       <div className="card p-6">
                         <div className="flex items-start justify-between mb-6">
                           <div className="flex items-center gap-4">
@@ -228,8 +228,7 @@ const DashboardPage = () => {
                           </div>
                         </div>
                       </div>
-                    ) : (
-                      {editingProfile ? (
+                    ) : editingProfile ? (
                       <div className="card p-6">
                         <div className="flex items-center justify-between mb-6">
                           <h3 className="text-xl font-semibold text-white">
@@ -355,13 +354,14 @@ const DashboardPage = () => {
                           <button onClick={() => setEditingProfile(false)} className="btn-secondary">Odustani</button>
                         </div>
                       </div>
-                    ) : (
+                    )}
+
+                    {!workerProfile && !editingProfile && (
                       <div className="card p-8 text-center">
                         <h3 className="text-xl font-semibold text-white mb-2">Nemate profil radnika</h3>
                         <p className="text-gray-400 mb-4">Kreirajte svoj profil da počnete dobijati poslove</p>
                         <button onClick={() => setEditingProfile(true)} className="btn-primary">Kreiraj profil</button>
                       </div>
-                    )}
                     )}
                   </>
                 )}

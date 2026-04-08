@@ -157,36 +157,51 @@ export const updateWorkerProfile = async (req, res) => {
     const params = [];
     let paramCount = 0;
 
+    const fieldMap = {
+      firstName: 'text',
+      lastName: 'text',
+      phone: 'text',
+      location: 'text',
+      category: 'text',
+      subcategory: 'text',
+      description: 'text',
+      hourlyRate: 'numeric',
+      experienceYears: 'int',
+      availability: 'text',
+      skills: 'text[]',
+      languages: 'text[]',
+      serviceArea: 'text[]'
+    };
+
     for (const [key, value] of Object.entries(data)) {
-      if (key === 'skills' || key === 'languages' || key === 'serviceArea') {
-        paramCount++;
+      paramCount++;
+      const fieldType = fieldMap[key];
+      
+      if (fieldType === 'text[]') {
         const arr = Array.isArray(value) ? value : [];
         params.push(arr);
-        updates.push(`"${key}" = $${paramCount}`);
       } else {
-        paramCount++;
         params.push(value);
-        updates.push(`"${key}" = $${paramCount}`);
       }
+      updates.push(`"${key}" = $${paramCount}`);
     }
 
     if (updates.length > 0) {
       params.push(parseInt(id));
-      const sql = `UPDATE worker_profiles SET ${updates.join(', ')}, "updatedAt" = CURRENT_TIMESTAMP WHERE id = $${params.length}`;
-      console.log('Update SQL:', sql, params);
-      await pool.query(sql, params);
+      const setClause = updates.join(', ');
+      await pool.query(`UPDATE worker_profiles SET ${setClause}, "updatedAt" = CURRENT_TIMESTAMP WHERE id = $${params.length}`, params);
     }
 
     const result = await pool.query('SELECT * FROM worker_profiles WHERE id = $1', [parseInt(id)]);
-    if (result.rows.length === 0) {
+    if (!result.rows || result.rows.length === 0) {
       return res.status(404).json({ error: 'Worker not found' });
     }
     res.json({ message: 'Worker profile updated successfully', workerProfile: result.rows[0] });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: error.errors[0].message });
-    }
     console.error('Update worker error:', error);
+    if (error instanceof z.ZodError && error.errors) {
+      return res.status(400).json({ error: error.errors[0]?.message || 'Validation error' });
+    }
     res.status(500).json({ error: 'Server error' });
   }
 };

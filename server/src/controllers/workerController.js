@@ -159,14 +159,9 @@ export const updateWorkerProfile = async (req, res) => {
 
     for (const [key, value] of Object.entries(data)) {
       paramCount++;
-      if (key === 'skills' || key === 'languages' || key === 'serviceArea') {
-        if (Array.isArray(value)) {
-          params.push(JSON.stringify(value));
-          updates.push(`"${key}" = $${paramCount}::jsonb`);
-        } else {
-          params.push(value);
-          updates.push(`"${key}" = $${paramCount}`);
-        }
+      if ((key === 'skills' || key === 'languages' || key === 'serviceArea') && Array.isArray(value)) {
+        params.push(JSON.stringify(value));
+        updates.push(`"${key}" = $${paramCount}::jsonb`);
       } else {
         params.push(value);
         updates.push(`"${key}" = $${paramCount}`);

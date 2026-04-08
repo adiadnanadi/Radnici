@@ -6,7 +6,8 @@ import {
   updateWorkerProfile, 
   deleteWorkerProfile,
   getCategories,
-  getLocations
+  getLocations,
+  getMyProfile
 } from '../controllers/workerController.js';
 import { authenticate } from '../middleware/auth.js';
 
@@ -15,6 +16,7 @@ const router = Router();
 router.get('/', getAllWorkers);
 router.get('/categories', getCategories);
 router.get('/locations', getLocations);
+router.get('/me', authenticate, getMyProfile);
 router.get('/:id', getWorkerById);
 
 router.post('/', authenticate, createWorkerProfile);

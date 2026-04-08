@@ -44,25 +44,27 @@ const DashboardPage = () => {
     setLoading(true);
     try {
       if (isWorker) {
-        const workers = await workerService.getAll({ search: user?.firstName });
-        if (workers.workers.length > 0) {
-          setWorkerProfile(workers.workers[0]);
+        try {
+          const profile = await workerService.getMyProfile();
+          setWorkerProfile(profile);
           setFormData({
-            firstName: workers.workers[0].firstName || '',
-            lastName: workers.workers[0].lastName || '',
-            phone: workers.workers[0].phone || '',
-            location: workers.workers[0].location || '',
-            category: workers.workers[0].category || '',
-            subcategory: workers.workers[0].subcategory || '',
-            description: workers.workers[0].description || '',
-            hourlyRate: workers.workers[0].hourlyRate || 0,
-            experienceYears: workers.workers[0].experienceYears || 0,
-            availability: workers.workers[0].availability || 'AVAILABLE',
-            skills: workers.workers[0].skills || [],
-            languages: workers.workers[0].languages || [],
-            serviceArea: workers.workers[0].serviceArea || [],
-            galleryImages: workers.workers[0].galleryImages || []
+            firstName: profile.firstName || '',
+            lastName: profile.lastName || '',
+            phone: profile.phone || '',
+            location: profile.location || '',
+            category: profile.category || '',
+            subcategory: profile.subcategory || '',
+            description: profile.description || '',
+            hourlyRate: profile.hourlyRate || 0,
+            experienceYears: profile.experienceYears || 0,
+            availability: profile.availability || 'AVAILABLE',
+            skills: profile.skills || [],
+            languages: profile.languages || [],
+            serviceArea: profile.serviceArea || [],
+            galleryImages: profile.galleryImages || []
           });
+        } catch (e) {
+          console.log('No worker profile yet');
         }
       }
       

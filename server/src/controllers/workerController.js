@@ -113,6 +113,21 @@ export const getWorkerById = async (req, res) => {
   }
 };
 
+export const getMyProfile = async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM worker_profiles WHERE "userId" = $1', [req.user.userId]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Worker profile not found' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Get my profile error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
 export const createWorkerProfile = async (req, res) => {
   try {
     const data = createWorkerProfileSchema.parse(req.body);

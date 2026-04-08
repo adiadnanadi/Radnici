@@ -48,6 +48,7 @@ export const workerService = {
     return api.get(`/workers${query ? `?${query}` : ''}`);
   },
   getById: (id) => api.get(`/workers/${id}`),
+  getMyProfile: () => api.get('/workers/me'),
   create: (data) => api.post('/workers', data),
   update: (id, data) => api.put(`/workers/${id}`, data),
   delete: (id) => api.delete(`/workers/${id}`),

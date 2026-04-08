@@ -34,6 +34,7 @@ const DashboardPage = () => {
   const [newLanguage, setNewLanguage] = useState('');
   const [newArea, setNewArea] = useState('');
   const [newImageUrl, setNewImageUrl] = useState('');
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -138,6 +139,22 @@ const DashboardPage = () => {
       setFormData({ ...formData, galleryImages: [...(formData.galleryImages || []), newImageUrl.trim()] });
       setNewImageUrl('');
     }
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    if (file.size > 500000) {
+      alert('Slika je prevelika. Maksimum 500KB.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFormData({ ...formData, galleryImages: [...(formData.galleryImages || []), reader.result] });
+    };
+    reader.readAsDataURL(file);
   };
 
   const removeGalleryImage = (index) => {
@@ -365,16 +382,18 @@ const DashboardPage = () => {
                         </div>
 
                         <div className="mt-4">
-                          <label className="input-label">Galerija radova (URL slike)</label>
+                          <label className="input-label">Galerija radova</label>
                           <div className="flex gap-2 mb-2">
-                            <input 
-                              type="url" 
-                              value={newImageUrl || ''} 
-                              onChange={(e) => setNewImageUrl(e.target.value)} 
-                              className="input-field flex-1" 
-                              placeholder="https://primjer.com/slika.jpg" 
-                            />
-                            <button type="button" onClick={addGalleryImage} className="btn-secondary"><Plus className="w-5 h-5" /></button>
+                            <label className="btn-secondary cursor-pointer flex items-center gap-2">
+                              <Image className="w-5 h-5" />
+                              Upload slike
+                              <input 
+                                type="file" 
+                                accept="image/*" 
+                                onChange={handleImageUpload} 
+                                className="hidden"
+                              />
+                            </label>
                           </div>
                           {formData.galleryImages?.length > 0 && (
                             <div className="grid grid-cols-3 gap-2 mt-2">

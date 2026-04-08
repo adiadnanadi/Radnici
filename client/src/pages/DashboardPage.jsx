@@ -173,7 +173,7 @@ const DashboardPage = () => {
               <div className="space-y-6">
                 {isWorker && (
                   <>
-                    {editingProfile && (
+                    {(workerProfile && !editingProfile) && (
                       <div className="card p-6">
                         <div className="flex items-start justify-between mb-6">
                           <div className="flex items-center gap-4">
@@ -228,7 +228,9 @@ const DashboardPage = () => {
                           </div>
                         </div>
                       </div>
-                    ) : editingProfile ? (
+                    )}
+
+                    {editingProfile && (
                       <div className="card p-6">
                         <div className="flex items-center justify-between mb-6">
                           <h3 className="text-xl font-semibold text-white">

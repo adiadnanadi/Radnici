@@ -17,6 +17,7 @@ const createWorkerProfileSchema = z.object({
   serviceArea: z.array(z.string()).optional(),
   languages: z.array(z.string()).optional(),
   skills: z.array(z.string()).optional(),
+  galleryImages: z.array(z.string()).optional(),
 });
 
 const updateWorkerProfileSchema = z.object({
@@ -33,6 +34,7 @@ const updateWorkerProfileSchema = z.object({
   serviceArea: z.array(z.string()).optional().nullable(),
   languages: z.array(z.string()).optional().nullable(),
   skills: z.array(z.string()).optional().nullable(),
+  galleryImages: z.array(z.string()).optional().nullable(),
 });
 
 export const getAllWorkers = async (req, res) => {
@@ -186,7 +188,8 @@ export const updateWorkerProfile = async (req, res) => {
       availability: 'text',
       skills: 'text[]',
       languages: 'text[]',
-      serviceArea: 'text[]'
+      serviceArea: 'text[]',
+      galleryImages: 'text[]'
     };
 
     for (const [key, value] of Object.entries(data)) {

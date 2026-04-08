@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { User, Mail, MessageSquare, Heart, Settings, Edit, Shield, MapPin, Phone, Briefcase, Star, Clock, X, Save, Plus, Trash } from 'lucide-react';
+import { User, Mail, MessageSquare, Heart, Settings, Edit, Shield, MapPin, Phone, Briefcase, Star, Clock, X, Save, Plus, Trash, Image } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { workerService, messageService, favoriteService } from '../services/api';
 import { CATEGORIES } from '../data/categories';
@@ -27,11 +27,13 @@ const DashboardPage = () => {
     availability: 'AVAILABLE',
     skills: [],
     languages: [],
-    serviceArea: []
+    serviceArea: [],
+    galleryImages: []
   });
   const [newSkill, setNewSkill] = useState('');
   const [newLanguage, setNewLanguage] = useState('');
   const [newArea, setNewArea] = useState('');
+  const [newImageUrl, setNewImageUrl] = useState('');
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -58,7 +60,8 @@ const DashboardPage = () => {
             availability: workers.workers[0].availability || 'AVAILABLE',
             skills: workers.workers[0].skills || [],
             languages: workers.workers[0].languages || [],
-            serviceArea: workers.workers[0].serviceArea || []
+            serviceArea: workers.workers[0].serviceArea || [],
+            galleryImages: workers.workers[0].galleryImages || []
           });
         }
       }
@@ -126,6 +129,17 @@ const DashboardPage = () => {
 
   const removeServiceArea = (index) => {
     setFormData({ ...formData, serviceArea: formData.serviceArea.filter((_, i) => i !== index) });
+  };
+
+  const addGalleryImage = () => {
+    if (newImageUrl.trim()) {
+      setFormData({ ...formData, galleryImages: [...(formData.galleryImages || []), newImageUrl.trim()] });
+      setNewImageUrl('');
+    }
+  };
+
+  const removeGalleryImage = (index) => {
+    setFormData({ ...formData, galleryImages: formData.galleryImages.filter((_, i) => i !== index) });
   };
 
   const tabs = [
@@ -346,6 +360,36 @@ const DashboardPage = () => {
                               </span>
                             ))}
                           </div>
+                        </div>
+
+                        <div className="mt-4">
+                          <label className="input-label">Galerija radova (URL slike)</label>
+                          <div className="flex gap-2 mb-2">
+                            <input 
+                              type="url" 
+                              value={newImageUrl || ''} 
+                              onChange={(e) => setNewImageUrl(e.target.value)} 
+                              className="input-field flex-1" 
+                              placeholder="https://primjer.com/slika.jpg" 
+                            />
+                            <button type="button" onClick={addGalleryImage} className="btn-secondary"><Plus className="w-5 h-5" /></button>
+                          </div>
+                          {formData.galleryImages?.length > 0 && (
+                            <div className="grid grid-cols-3 gap-2 mt-2">
+                              {formData.galleryImages.map((img, i) => (
+                                <div key={i} className="relative group">
+                                  <img src={img} alt={`Gallery ${i + 1}`} className="w-full h-20 object-cover rounded-lg" />
+                                  <button 
+                                    type="button" 
+                                    onClick={() => removeGalleryImage(i)}
+                                    className="absolute top-1 right-1 bg-red-500 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                  >
+                                    <X className="w-3 h-3 text-white" />
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
 
                         <div className="mt-6 flex gap-4">

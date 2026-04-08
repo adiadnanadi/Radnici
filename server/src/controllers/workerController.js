@@ -7,7 +7,6 @@ const createWorkerProfileSchema = z.object({
   firstName: z.string().min(2),
   lastName: z.string().min(2),
   phone: z.string().optional(),
-  whatsapp: z.string().optional(),
   location: z.string().min(1, 'Location is required'),
   category: z.string().min(1, 'Category is required'),
   subcategory: z.string().optional(),
@@ -24,7 +23,6 @@ const updateWorkerProfileSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   phone: z.string().optional().nullable(),
-  whatsapp: z.string().optional().nullable(),
   location: z.string().optional().nullable(),
   category: z.string().optional().nullable(),
   subcategory: z.string().optional().nullable(),
@@ -124,14 +122,13 @@ export const createWorkerProfile = async (req, res) => {
 
     const result = await pool.query(
       `INSERT INTO worker_profiles ("userId", "firstName", "lastName", phone, whatsapp, location, category, subcategory, description, "hourlyRate", "experienceYears", availability, "serviceArea", languages, skills, "isActive")
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13::jsonb, $14::jsonb, $15::jsonb, true)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12::jsonb, $13::jsonb, $14::jsonb, true)
        RETURNING *`,
       [
         req.user.userId,
         data.firstName,
         data.lastName,
         data.phone || '',
-        data.whatsapp || '',
         data.location,
         data.category,
         data.subcategory || '',

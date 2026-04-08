@@ -18,7 +18,6 @@ const DashboardPage = () => {
     firstName: '',
     lastName: '',
     phone: '',
-    whatsapp: '',
     location: '',
     category: '',
     subcategory: '',
@@ -50,7 +49,6 @@ const DashboardPage = () => {
             firstName: workers.workers[0].firstName || '',
             lastName: workers.workers[0].lastName || '',
             phone: workers.workers[0].phone || '',
-            whatsapp: workers.workers[0].whatsapp || '',
             location: workers.workers[0].location || '',
             category: workers.workers[0].category || '',
             subcategory: workers.workers[0].subcategory || '',
@@ -255,10 +253,6 @@ const DashboardPage = () => {
                           <div>
                             <label className="input-label">Telefon</label>
                             <input type="tel" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} className="input-field" />
-                          </div>
-                          <div>
-                            <label className="input-label">WhatsApp</label>
-                            <input type="tel" value={formData.whatsapp || ''} onChange={(e) => setFormData({...formData, whatsapp: e.target.value})} className="input-field" placeholder="+3876xxxxxxx" />
                           </div>
                           <div>
                             <label className="input-label">Lokacija *</label>

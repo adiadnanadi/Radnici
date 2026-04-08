@@ -158,11 +158,13 @@ export const updateWorkerProfile = async (req, res) => {
     let paramCount = 0;
 
     for (const [key, value] of Object.entries(data)) {
-      paramCount++;
-      if ((key === 'skills' || key === 'languages' || key === 'serviceArea') && Array.isArray(value)) {
-        params.push(JSON.stringify(value));
-        updates.push(`"${key}" = $${paramCount}::jsonb`);
+      if (key === 'skills' || key === 'languages' || key === 'serviceArea') {
+        paramCount++;
+        const arr = Array.isArray(value) ? value : [];
+        params.push(arr);
+        updates.push(`"${key}" = $${paramCount}`);
       } else {
+        paramCount++;
         params.push(value);
         updates.push(`"${key}" = $${paramCount}`);
       }
@@ -170,7 +172,9 @@ export const updateWorkerProfile = async (req, res) => {
 
     if (updates.length > 0) {
       params.push(parseInt(id));
-      await pool.query(`UPDATE worker_profiles SET ${updates.join(', ')}, "updatedAt" = CURRENT_TIMESTAMP WHERE id = $${paramCount}`, params);
+      const sql = `UPDATE worker_profiles SET ${updates.join(', ')}, "updatedAt" = CURRENT_TIMESTAMP WHERE id = $${params.length}`;
+      console.log('Update SQL:', sql, params);
+      await pool.query(sql, params);
     }
 
     const result = await pool.query('SELECT * FROM worker_profiles WHERE id = $1', [parseInt(id)]);

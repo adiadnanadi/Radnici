@@ -156,14 +156,15 @@ export const updateWorkerProfile = async (req, res) => {
     const updates = [];
     const params = [];
     let paramCount = 0;
-    const arrayFields = ['skills', 'languages', 'serviceArea'];
 
     Object.entries(data).forEach(([key, value]) => {
       paramCount++;
-      if (arrayFields.includes(key)) {
-        const arrValue = Array.isArray(value) ? value : JSON.parse(value || '[]');
-        const jsonStr = JSON.stringify(arrValue);
-        params.push(jsonStr);
+      if (key === 'skills' || key === 'languages' || key === 'serviceArea') {
+        if (value && typeof value === 'object') {
+          params.push(JSON.stringify(value));
+        } else {
+          params.push(JSON.stringify([]));
+        }
         updates.push(`"${key}" = $${paramCount}::jsonb`);
       } else {
         params.push(value);

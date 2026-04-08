@@ -49,6 +49,7 @@ export const initDatabase = async () => {
         "firstName" VARCHAR(100) NOT NULL,
         "lastName" VARCHAR(100) NOT NULL,
         phone VARCHAR(50),
+        whatsapp VARCHAR(50),
         location VARCHAR(255),
         category VARCHAR(100),
         subcategory VARCHAR(100),

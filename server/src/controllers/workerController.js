@@ -169,11 +169,14 @@ export const updateWorkerProfile = async (req, res) => {
     }
 
     if (updates.length > 0) {
-      params.push(id);
+      params.push(parseInt(id));
       await pool.query(`UPDATE worker_profiles SET ${updates.join(', ')}, "updatedAt" = CURRENT_TIMESTAMP WHERE id = $${paramCount}`, params);
     }
 
-    const result = await pool.query('SELECT * FROM worker_profiles WHERE id = $1', [id]);
+    const result = await pool.query('SELECT * FROM worker_profiles WHERE id = $1', [parseInt(id)]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Worker not found' });
+    }
     res.json({ message: 'Worker profile updated successfully', workerProfile: result.rows[0] });
   } catch (error) {
     if (error instanceof z.ZodError) {

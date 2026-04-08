@@ -1,9 +1,7 @@
 import pkg from 'express';
 const { Request, Response } = pkg;
 import { z } from 'zod';
-import { getPool } from '../db.js';
-
-const pool = getPool();
+import pool from '../db.js';
 
 const createWorkerProfileSchema = z.object({
   firstName: z.string().min(2),

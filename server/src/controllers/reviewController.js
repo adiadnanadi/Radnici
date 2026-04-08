@@ -1,9 +1,7 @@
 import pkg from 'express';
 const { Request, Response } = pkg;
 import { z } from 'zod';
-import { getPool } from '../db.js';
-
-const pool = getPool();
+import pool from '../db.js';
 
 const createReviewSchema = z.object({
   workerId: z.number().min(1, 'Worker ID is required'),

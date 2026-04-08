@@ -2,42 +2,38 @@ import pg from 'pg';
 
 const { Pool } = pg;
 
-let pool = null;
-
-export const getPool = () => {
-  if (!pool && process.env.DATABASE_URL) {
-    pool = new Pool({
+const pool = process.env.DATABASE_URL 
+  ? new Pool({
       connectionString: process.env.DATABASE_URL,
       ssl: {
         rejectUnauthorized: false,
         mode: 'require'
       }
-    });
-    
-    pool.on('connect', () => {
-      console.log('Connected to PostgreSQL database');
-    });
-    
-    pool.on('error', (err) => {
-      console.error('PostgreSQL error:', err);
-    });
-  }
-  return pool;
-};
+    })
+  : null;
+
+if (pool) {
+  pool.on('connect', () => {
+    console.log('Connected to PostgreSQL database');
+  });
+  
+  pool.on('error', (err) => {
+    console.error('PostgreSQL error:', err);
+  });
+}
 
 export const initDatabase = async () => {
-  const db = getPool();
-  if (!db) {
+  if (!pool) {
     console.log('⚠️ No database connection - DATABASE_URL not set');
     return;
   }
   
   try {
     console.log('Testing database connection...');
-    const result = await db.query('SELECT 1 as test');
+    const result = await pool.query('SELECT 1 as test');
     console.log('Database connection test:', result.rows);
     
-    await db.query(`
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         email VARCHAR(255) UNIQUE NOT NULL,
@@ -108,4 +104,4 @@ export const initDatabase = async () => {
   }
 };
 
-export default { query: (...args) => getPool()?.query(...args) };
+export default pool;

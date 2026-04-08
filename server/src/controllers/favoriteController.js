@@ -1,8 +1,6 @@
 import pkg from 'express';
 const { Request, Response } = pkg;
-import { getPool } from '../db.js';
-
-const pool = getPool();
+import pool from '../db.js';
 
 export const getFavorites = async (req, res) => {
   try {

@@ -157,20 +157,21 @@ export const updateWorkerProfile = async (req, res) => {
     const params = [];
     let paramCount = 0;
 
-    Object.entries(data).forEach(([key, value]) => {
+    for (const [key, value] of Object.entries(data)) {
       paramCount++;
       if (key === 'skills' || key === 'languages' || key === 'serviceArea') {
-        if (value && typeof value === 'object') {
+        if (Array.isArray(value)) {
           params.push(JSON.stringify(value));
+          updates.push(`"${key}" = $${paramCount}::jsonb`);
         } else {
-          params.push(JSON.stringify([]));
+          params.push(value);
+          updates.push(`"${key}" = $${paramCount}`);
         }
-        updates.push(`"${key}" = $${paramCount}::jsonb`);
       } else {
         params.push(value);
         updates.push(`"${key}" = $${paramCount}`);
       }
-    });
+    }
 
     if (updates.length > 0) {
       params.push(id);

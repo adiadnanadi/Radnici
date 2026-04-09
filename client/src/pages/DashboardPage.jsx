@@ -173,9 +173,11 @@ const DashboardPage = () => {
     setFormData({ ...formData, galleryImages: formData.galleryImages.filter((_, i) => i !== index) });
   };
 
+  const navigate = useNavigate();
+
   const tabs = [
     { id: 'overview', label: 'Pregled', icon: User },
-    { id: 'messages', label: 'Poruke', icon: Mail, count: messages.filter(m => !m.isRead).length },
+    { id: 'messages', label: 'Poruke', icon: Mail, action: () => navigate('/messages'), count: messages.filter(m => !m.isRead).length },
     { id: 'favorites', label: 'Favoriti', icon: Heart },
     { id: 'settings', label: 'Postavke', icon: Settings }
   ];
@@ -194,7 +196,10 @@ const DashboardPage = () => {
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
+                  onClick={() => {
+                    if (tab.action) tab.action();
+                    else setActiveTab(tab.id);
+                  }}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                     activeTab === tab.id
                       ? 'bg-primary-500/20 text-primary-400'

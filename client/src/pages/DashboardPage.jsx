@@ -507,8 +507,11 @@ const DashboardPage = () => {
 
             {activeTab === 'messages' && (
               <div className="card">
-                <div className="p-6 border-b border-white/10">
+                <div className="p-6 border-b border-white/10 flex justify-between items-center">
                   <h3 className="text-lg font-semibold text-white">Poruke</h3>
+                  <Link to="/messages" className="text-primary-400 hover:text-primary-300 text-sm">
+                    Otvori sve poruke →
+                  </Link>
                 </div>
                 {messages.length === 0 ? (
                   <div className="p-8 text-center">

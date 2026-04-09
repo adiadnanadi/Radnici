@@ -77,6 +77,13 @@ const DashboardPage = () => {
         setMessages(msgsData.slice(0, 5));
         setFavorites(favsData.slice(0, 4));
       }
+      
+      if (isWorker) {
+        try {
+          const msgsData = await messageService.getInbox();
+          setMessages(msgsData.slice(0, 10));
+        } catch (e) {}
+      }
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {

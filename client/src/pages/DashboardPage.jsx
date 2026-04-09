@@ -173,8 +173,6 @@ const DashboardPage = () => {
     setFormData({ ...formData, galleryImages: formData.galleryImages.filter((_, i) => i !== index) });
   };
 
-  const navigate = useNavigate();
-
   const tabs = [
     { id: 'overview', label: 'Pregled', icon: User },
     { id: 'messages', label: 'Poruke', icon: Mail, action: () => navigate('/messages'), count: messages.filter(m => !m.isRead).length },

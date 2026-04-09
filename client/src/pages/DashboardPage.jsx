@@ -145,14 +145,19 @@ const DashboardPage = () => {
     const file = e.target.files[0];
     if (!file) return;
     
-    if (file.size > 500000) {
-      alert('Slika je prevelika. Maksimum 500KB.');
+    if (file.size > 200000) {
+      alert('Slika je prevelika. Maksimum 200KB. Molimo izaberite manju sliku.');
       return;
     }
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      setFormData({ ...formData, galleryImages: [...(formData.galleryImages || []), reader.result] });
+      const base64 = reader.result;
+      if (base64.length > 300000) {
+        alert('Slika je prevelika nakon konverzije. Molimo izaberite manju sliku.');
+        return;
+      }
+      setFormData({ ...formData, galleryImages: [...(formData.galleryImages || []), base64] });
     };
     reader.readAsDataURL(file);
   };

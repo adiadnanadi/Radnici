@@ -19,15 +19,44 @@ export default {
           800: '#075985',
           900: '#0c4a6e',
         },
+        accent: {
+          50: '#fdf4ff',
+          100: '#fae8ff',
+          200: '#f5d0fe',
+          300: '#f0abfc',
+          400: '#e879f9',
+          500: '#d946ef',
+          600: '#c026d3',
+          700: '#a21caf',
+          800: '#86198f',
+          900: '#701a75',
+        },
         dark: {
+          50: '#334155',
           100: '#1e293b',
           200: '#0f172a',
           300: '#0a0f1a',
+          400: '#020617',
         }
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Poppins', 'system-ui', 'sans-serif'],
       },
+      animation: {
+        'float': 'float 3s ease-in-out infinite',
+        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        }
+      },
+      boxShadow: {
+        'glow': '0 0 20px rgba(14, 165, 233, 0.3)',
+        'glow-lg': '0 0 40px rgba(14, 165, 233, 0.4)',
+      }
     },
   },
   plugins: [],

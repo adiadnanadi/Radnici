@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Search, Mail, MapPin, Wrench, Facebook, Instagram, Linkedin } from 'lucide-react';
+import { Mail, MapPin, Wrench } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -20,17 +20,6 @@ const Footer = () => {
               Najveća platforma za pronalaženje pouzdanih radnika u Bosni i Hercegovini. 
               Povezujemo majstore sa klijentima od 2024.
             </p>
-            <div className="flex gap-3">
-              <a href="#" className="w-9 h-9 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-primary-400 transition-all">
-                <Facebook className="w-4 h-4" />
-              </a>
-              <a href="#" className="w-9 h-9 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-primary-400 transition-all">
-                <Instagram className="w-4 h-4" />
-              </a>
-              <a href="#" className="w-9 h-9 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-primary-400 transition-all">
-                <Linkedin className="w-4 h-4" />
-              </a>
-            </div>
           </div>
 
           <div>
